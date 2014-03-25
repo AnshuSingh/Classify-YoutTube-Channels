@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping package="edu.asu.classifyChannels.model">
+
+    <class name="A_Videos" table="T_Videos">
+        <id name="id" column="ID" />
+        <property name="snippet"/>
+        <property name="contentDetails"/>
+        <property name="processingDetails"/>
+        <property name="recordingDetails"/>
+        <property name="statistics"/>
+        <property name="status"/>
+        <property name="suggestions"/>
+        <property name="topicDetails"/>
+    </class>
+
+</hibernate-mapping>

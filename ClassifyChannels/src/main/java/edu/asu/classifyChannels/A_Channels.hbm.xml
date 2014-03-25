@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping package="edu.asu.classifyChannels.model">
+
+    <class name="A_Channels" table="T_Channels">
+        <id name="id" column="ID" />
+        <property name="snippet"/>
+        <property name="channelTitle"/>
+        <property name="description"/>
+        <property name="title"/>
+        <property name="unknownKeys"/>
+    </class>
+
+</hibernate-mapping>
