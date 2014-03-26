@@ -4,11 +4,10 @@ package edu.asu.classifyChannels.model;
 public class A_Channels {
 	
 	private String id;
-	private String snippet;
 	private String channelTitle;
 	private String description;
 	private String title;
-	private String unknownKeys;
+	private String category;
 	
 	public String getId() {
 		return id;
@@ -16,12 +15,7 @@ public class A_Channels {
 	public void setId(String id) {
 		this.id = id;
 	}
-	public String getSnippet() {
-		return snippet;
-	}
-	public void setSnippet(String snippet) {
-		this.snippet = snippet;
-	}
+	
 	public String getChannelTitle() {
 		return channelTitle;
 	}
@@ -40,10 +34,10 @@ public class A_Channels {
 	public void setTitle(String title) {
 		this.title = title;
 	}
-	public String getUnknownKeys() {
-		return unknownKeys;
+	public String getCategory() {
+		return category;
 	}
-	public void setUnknownKeys(String unknownKeys) {
-		this.unknownKeys = unknownKeys;
+	public void setCategory(String category) {
+		this.category = category;
 	}
 }

@@ -1,10 +1,10 @@
 package edu.asu.classifyChannels;
-import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
 
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
+import org.hibernate.exception.ConstraintViolationException;
 import org.hibernate.exception.LockTimeoutException;
 
 import com.google.api.services.youtube.model.ResourceId;
@@ -18,16 +18,18 @@ public class DbManager {
 
 	    public static void main(String[] args) {
 	    	DbManager mgr = new DbManager();
-	    	
-	    	List<SearchResult> searchResultList = Search.searchEntities("videos");
-	    	if (searchResultList != null){
-	    		mgr.storeResult(searchResultList.iterator());
+	    	String [] categories = {"country", "rock", "hip hop", "jazz", "blues"};
+	    	for (int i = 0; i < categories.length; i++){
+	    		List<SearchResult> searchResultList = Search.searchEntities("videos", categories[i]);
+		    	if (searchResultList != null){
+		    		mgr.storeResult(searchResultList.iterator(),categories[i] );
+		    	}
 	    	}
 	    	HibernateUtil.getSessionFactory().close();
 	    }
 	        
 	    
-	    private void storeResult(Iterator<SearchResult> iteratorSearchResults) {
+	    private void storeResult(Iterator<SearchResult> iteratorSearchResults, String category) {
 			Session session = HibernateUtil.getSessionFactory().getCurrentSession();
 	        session.beginTransaction();
 	        
@@ -46,15 +48,10 @@ public class DbManager {
 	            	SearchResultSnippet theSnippet = singleVideo.getSnippet();
 	            	A_Channels theChannel = new A_Channels();
 	            	theChannel.setId(rId.getVideoId());
-	            	try {
-						theChannel.setSnippet(theSnippet.toPrettyString());
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
 	     	        theChannel.setChannelTitle(theSnippet.getChannelTitle());
 	     	        theChannel.setDescription(theSnippet.getDescription());
 	     	        theChannel.setTitle(theSnippet.getTitle());
-	     	        theChannel.setUnknownKeys(theSnippet.getUnknownKeys().toString());
+	     	        theChannel.setCategory(category);
 	     	        session.save(theChannel);
 
 	     	        //System.out.println(" Video Id" + rId.getVideoId());
@@ -67,6 +64,9 @@ public class DbManager {
 	        catch (LockTimeoutException e){
 	        	e.printStackTrace();
 	        }
+		    catch(ConstraintViolationException e){
+		    	e.printStackTrace();
+		    }
 		    catch (HibernateException e){
 	        	e.printStackTrace();
 	        }
@@ -74,39 +74,5 @@ public class DbManager {
 	        	e.printStackTrace();
 	        }
 	    }
-
-	    /*
-	    private static List listA_Channels() {
-	        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
-	        session.beginTransaction();
-	        List result = session.createQuery("from A_Channels").list();
-	        session.getTransaction().commit();
-	        return result;
-	    }
-	    
-	    private void addA_VideosToEvent(Long personId, Long eventId) {
-	        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
-	        session.beginTransaction();
-
-	        A_Videos aA_Videos = (A_Videos) session
-	                .createQuery("select p from A_Videos p left join fetch p.events where p.id = :pid")
-	                .setParameter("pid", personId)
-	                .uniqueResult(); // Eager fetch the collection so we can use it detached
-	        A_Channels anEvent = (A_Channels) session.load(A_Channels.class, eventId);
-
-	        session.getTransaction().commit();
-
-	        // End of first unit of work
-
-	        aA_Videos.getA_Channels().add(anEvent); // aA_Videos (and its collection) is detached
-
-	        // Begin second unit of work
-
-	        Session session2 = HibernateUtil.getSessionFactory().getCurrentSession();
-	        session2.beginTransaction();
-	        session2.update(aA_Videos); // Reattachment of aA_Videos
-
-	        session2.getTransaction().commit();
-	    }*/
 
 	}
